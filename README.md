@@ -15,7 +15,7 @@ Custom FF2R boss ability that spawns configurable pickup items (sprites or 3D mo
 
 ## Config
 
-Add a `special_spawn_items` ability block to your boss config:
+Add a `special_spawn_items` ability and `glow_items` block to your boss config:
 
 ```
 "special_spawn_items"
@@ -36,7 +36,7 @@ Add a `special_spawn_items` ability block to your boss config:
 	}
 	"item2"
 	{
-		"vtm"					"freak_fortress_2/doom/item_shotgun.vmt"
+		"vtm"					""
         "model"					"models/weapons/c_models/c_scattergun.mdl"
 		"pickup_sound"			"freak_fortress_2/doom/item_weaponpickup.wav"
         "pickup_sound"			"freak_fortress_2/doom/item_pickup.wav"
