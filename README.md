@@ -15,7 +15,7 @@ Custom FF2R boss ability that spawns configurable pickup items (sprites or 3D mo
 
 ## Config
 
-Add a `special_spawn_items` ability and `glow_items` block to your boss config:
+Add a `special_spawn_items` and `glow_items` ability block to your boss config:
 
 ```
 "special_spawn_items"
