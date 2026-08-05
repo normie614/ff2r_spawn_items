@@ -10,7 +10,7 @@
 			"vtm"					"freak_fortress_2/doom/item_berserk.vmt" // Sprite material (no "materials/" prefix). Leave empty if using model.
             "model"					""                                      // Leave empty if using "vtm". Set a .mdl path to spawn a 3D model instead.
 			"pickup_sound"			"freak_fortress_2/doom/item_pickup.wav" // Self explanatory, required.
-            "pickup_sound"			"freak_fortress_2/doom/item_pickup.wav" // No sound is played if not defined.
+            "spawn_sound"			"freak_fortress_2/doom/item_pickup.wav" // No sound is played if not defined.
 			"grab_flags"			""   // Missing or 1 = Boss | 2 = Minions | 4 = Enemy | add values together (3 = Boss + Minions).
 			"do slot after low"		"5" // Example: Create a 'rage_new_weapon' somewhere with the slot "5", it will use it on touch.
 			"do slot after high"	"" // Optional slot range end. Empty = same as low.
@@ -20,7 +20,7 @@
 			"vtm"					"freak_fortress_2/doom/item_shotgun.vmt"
             "model"					"models/weapons/c_models/c_scattergun.mdl"
 			"pickup_sound"			"freak_fortress_2/doom/item_weaponpickup.wav"
-            "pickup_sound"			"freak_fortress_2/doom/item_pickup.wav"
+            "spawn_sound"			"freak_fortress_2/doom/item_pickup.wav"
 			"grab_flags"            ""
 			"do slot after low"		""
 			"do slot after high"	""
@@ -102,6 +102,7 @@ ItemSpawn g_ItemSpawns[128];
 int g_ItemSpawnCount;
 int g_MaxItems[MAXPLAYERS + 1];
 int g_OnDeathItemProbability;
+int g_iGlowRef[2048] = {INVALID_ENT_REFERENCE, ...};
 bool g_UsesItems;
 
 public void OnPluginStart()
@@ -124,6 +125,7 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	ItemCacheSpawnLocations();
+    g_UsesItems = false; // Just to be safe
 }
 
 public void OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -269,6 +271,7 @@ public void FF2R_OnBossRemoved(int client)
 
 	delete g_BossItems[client];
 	delete g_BossEntities[client];
+    g_UsesItems = false;
 }
 
 public void OnPlayerDeath(Handle event, const char[] name, bool dontBroadcast)
@@ -279,7 +282,7 @@ public void OnPlayerDeath(Handle event, const char[] name, bool dontBroadcast)
     int victim = GetClientOfUserId(GetEventInt(event, "userid"));
     int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 
-    if (!IsClientInGame(victim) || !IsClientInGame(attacker) || victim == attacker)
+    if (!IsValidClient(victim) || !IsValidClient(attacker) || victim == attacker)
         return;
 
     if (GetRandomInt(1, 100) > g_OnDeathItemProbability)
@@ -765,6 +768,15 @@ bool Boss_FindSpawnedItem(int entity, int &boss, SpawnedItem spawned)
 
 stock int TF2_AttachColoredGlow(int entity, TFTeam team = TFTeam_Unassigned, int rgba[4] = {255,255,255,255})
 {
+    if (g_iGlowRef[entity] != INVALID_ENT_REFERENCE)
+    {
+        int existingGlow = EntRefToEntIndex(g_iGlowRef[entity]);
+        if (IsValidEntity(existingGlow))
+        {
+            return existingGlow;
+        }
+    }
+
     int glow = CreateEntityByName("tf_glow");
     
     if (IsValidEntity(glow))
@@ -795,6 +807,7 @@ stock int TF2_AttachColoredGlow(int entity, TFTeam team = TFTeam_Unassigned, int
         AcceptEntityInput(glow, "SetGlowColor");
 
         SetEntPropString(entity, Prop_Data, "m_iName", glowTarget); // Restores the original name.
+        g_iGlowRef[entity] = EntIndexToEntRef(glow);
     }
     return glow;
 }
