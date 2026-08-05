@@ -29,7 +29,7 @@ Add a `special_spawn_items` and `glow_items` ability block to your boss config:
 		"vtm"					"freak_fortress_2/doom/item_berserk.vmt" // Sprite material (no "materials/" prefix). Leave empty if using model.
         "model"					""                                      // Leave empty if using "vtm". Set a .mdl path to spawn a 3D model instead.
 		"pickup_sound"			"freak_fortress_2/doom/item_pickup.wav" // Self explanatory, required.
-        "pickup_sound"			"freak_fortress_2/doom/item_pickup.wav" // No sound is played if not defined.
+        "spawn_sound"			"freak_fortress_2/doom/item_pickup.wav" // No sound is played if not defined.
 		"grab_flags"			""   // Missing or 1 = Boss | 2 = Minions | 4 = Enemy | add values together (3 = Boss + Minions).
 		"do slot after low"		"5" // Example: Create a 'rage_new_weapon' somewhere with the slot "5", it will use it on touch.
 		"do slot after high"	"" // Optional slot range end. Empty = same as low.
@@ -39,7 +39,7 @@ Add a `special_spawn_items` and `glow_items` ability block to your boss config:
 		"vtm"					""
         "model"					"models/weapons/c_models/c_scattergun.mdl"
 		"pickup_sound"			"freak_fortress_2/doom/item_weaponpickup.wav"
-        "pickup_sound"			"freak_fortress_2/doom/item_pickup.wav"
+        "spawn_sound"			"freak_fortress_2/doom/item_pickup.wav"
 		"grab_flags"            ""
 		"do slot after low"		""
 		"do slot after high"	""
